@@ -1,0 +1,23 @@
+version: '3.2'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: docker/app/Dockerfile.prod
+        image: something/app:latest
+        env_file:
+            - .env
+        networks:
+            default: ~
+
+    nginx:
+        build:
+            context: .
+            dockerfile: docker/nginx/Dockerfile.prod
+        image: something/nginx:latest
+        depends_on:
+            - app
+
+networks:
+    default: ~

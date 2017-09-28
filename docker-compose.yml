@@ -1,0 +1,30 @@
+version: '3.2'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: docker/app/Dockerfile.dev
+        image: something/app:dev
+        working_dir: /app
+        env_file:
+            - .env
+        volumes:
+            - ./:/app
+        networks:
+            default: ~
+
+    nginx:
+        build:
+            context: .
+            dockerfile: docker/nginx/Dockerfile.dev
+        image: something/nginx:dev
+        depends_on:
+            - app
+        ports:
+            - 8001:80
+        networks:
+            default: ~
+
+networks:
+    default: ~

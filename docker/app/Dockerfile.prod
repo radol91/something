@@ -1,0 +1,35 @@
+FROM php:7.1-fpm
+
+LABEL maintainer="octopus@trixse.com"
+
+WORKDIR /app
+
+ENV BUILD_DEPENDENCIES build-essential g++ gcc zlib1g-dev
+ENV RUNTIME_LIBRARIES zip curl make
+
+ENV PHP_EXTENSIONS pdo_mysql zip opcache
+ENV PECL_EXTENSIONS apcu
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ${BUILD_DEPENDENCIES} ${RUNTIME_LIBRARIES} && \
+    docker-php-ext-install ${PHP_EXTENSIONS} && \
+    pecl install ${PECL_EXTENSIONS} && \
+    docker-php-ext-enable ${PECL_EXTENSIONS} && \
+    apt-get remove -y --purge ${BUILD_DEPENDENCIES} && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY docker/app/php.ini /usr/local/etc/php/php.ini
+
+RUN curl --insecure https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+COPY . /app
+
+RUN rm -rf docker && \
+    composer install --no-progress && \
+    composer dump-autoload -o --apcu && \
+    chown -R www-data:www-data . && \
+    chmod 777 -R var && \
+    bin/console cache:warmup -e=prod
+
+COPY docker/app/run.sh /usr/local/bin/run
+RUN chmod +x /usr/local/bin/run

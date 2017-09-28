@@ -1,0 +1,5 @@
+FROM nginx:1.13
+
+LABEL maintainer="octopus@trixse.com"
+
+COPY docker/nginx/symfony.conf /etc/nginx/conf.d/default.conf
