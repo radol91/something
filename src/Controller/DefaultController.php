@@ -16,6 +16,6 @@ final class DefaultController
      */
     public function index(): JsonResponse
     {
-        return new JsonResponse(['message' => 'My name is Tomasz and I love spending cash! :)']);
+        return new JsonResponse(['message' => 'My name is Radosław and I am not sure what I am doing! :)']);
     }
 }
