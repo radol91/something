@@ -1,9 +1,1 @@
-<<<<<<< HEAD
 TEST 123 123 xxx
-=======
-TEST 123 123
-
-Change Something
-
-Change something in test.txt.
->>>>>>> ddbca9c... Change something in test.txt.
